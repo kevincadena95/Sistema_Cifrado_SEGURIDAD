@@ -1,1 +1,135 @@
-<p>cifrado-asimetrico works!</p>
+<main class="contenedor">
+
+    <section class="introduccion">
+        <h1>Generación de <span>Claves Asimétricas</span></h1>
+
+        <p>
+            Genera un par de claves criptográficas mediante el
+            algoritmo RSA. La clave pública puede compartirse,
+            mientras que la clave privada debe mantenerse
+            protegida.
+        </p>
+    </section>
+
+    <section class="generador">
+
+        <h2>Generar claves RSA</h2>
+
+        <p>
+            Presiona el botón para generar automáticamente
+            una clave pública y una clave privada.
+        </p>
+
+        <div class="detalles">
+            <p><strong>Algoritmo:</strong> RSA-OAEP</p>
+            <p><strong>Longitud:</strong> 3072 bits</p>
+            <p><strong>Hash:</strong> SHA-256</p>
+        </div>
+
+        <button type="button" class="btn-principal" (click)="generarClaves()" [disabled]="generando">
+
+            {{ generando ? 'Generando claves...' : 'Generar claves' }}
+
+        </button>
+
+        @if (mensaje) {
+        <p class="mensaje-exito" aria-live="polite">
+            {{ mensaje }}
+        </p>
+        }
+
+        @if (error) {
+        <p class="mensaje-error" role="alert">
+            {{ error }}
+        </p>
+        }
+
+    </section>
+
+    @if (clavePublica && clavePrivada) {
+
+    <section class="resultados">
+
+        <h2>Claves generadas</h2>
+
+        <div class="clave-contenedor">
+
+            <h3>Clave Pública</h3>
+
+            <p>
+                Esta clave puede compartirse con otras personas
+                para que puedan cifrar información dirigida a ti.
+            </p>
+
+            <textarea [value]="clavePublica" readonly spellcheck="false" aria-label="Clave pública">
+        </textarea>
+
+            <div class="acciones">
+
+                <button type="button" class="btn-secundario" (click)="copiarClave(clavePublica, 'pública')">
+                    Copiar clave
+                </button>
+
+                <button type="button" class="btn-secundario"
+                    (click)="descargarClave(clavePublica, 'clave_publica.pem')">
+                    Descargar clave
+                </button>
+
+            </div>
+
+        </div>
+
+        <div class="clave-contenedor">
+
+            <h3>Clave Privada</h3>
+
+            <p>
+                Esta clave es confidencial. No debes compartirla,
+                ya que permite descifrar información protegida
+                con la clave pública correspondiente.
+            </p>
+
+            @if (mostrarPrivada) {
+
+            <textarea [value]="clavePrivada" readonly spellcheck="false" aria-label="Clave privada">
+          </textarea>
+
+            } @else {
+
+            <div class="clave-oculta">
+                La clave privada está oculta por seguridad.
+            </div>
+
+            }
+
+            <div class="acciones">
+
+                <button type="button" class="btn-secundario" (click)="cambiarVisibilidad()">
+
+                    {{ mostrarPrivada ? 'Ocultar clave' : 'Mostrar clave' }}
+
+                </button>
+
+                <button type="button" class="btn-secundario" (click)="copiarClave(clavePrivada, 'privada')">
+                    Copiar clave
+                </button>
+
+                <button type="button" class="btn-secundario"
+                    (click)="descargarClave(clavePrivada, 'clave_privada.pem')">
+                    Descargar clave
+                </button>
+
+            </div>
+
+            <p class="advertencia">
+                Guarda la clave privada en un lugar seguro.
+                No la compartas ni la subas a repositorios públicos.
+            </p>
+
+        </div>
+
+    </section>
+
+    }
+
+</main>
