@@ -1,0 +1,57 @@
+
+<div class="home-container">
+  <header class="header">
+    <div class="logo">🔐 Sistema de Cifrado</div>
+    <span class="header-text">Seguridad Informática</span>
+  </header>
+
+  <main class="main-content">
+    <div class="welcome">
+      <span class="etiqueta">PROTECCIÓN DE INFORMACIÓN</span>
+      <h1>Bienvenidos al <span>Sistema de Cifrado</span></h1>
+      <p>
+        Una aplicación diseñada para conocer y utilizar diferentes
+        métodos de cifrado de información, permitiendo proteger
+        datos mediante técnicas de criptografía.
+      </p>
+    </div>
+
+    <h2>Selecciona un método de cifrado</h2>
+    <p class="subtitle">
+      Explora las opciones disponibles y descubre cómo funciona
+      cada tipo de cifrado.
+    </p>
+
+    <div class="cards">
+      <div class="card">
+        <div class="icono">🔑</div>
+        <h3>Cifrado Simétrico</h3>
+        <p>
+          Permite cifrar y descifrar información utilizando una
+          misma clave secreta. Podrás ingresar texto o cargar
+          archivos para proteger su contenido.
+        </p>
+        <a routerLink="/cifrado-simetrico" class="btn">
+          Ir al cifrado simétrico
+        </a>
+      </div>
+
+      <div class="card">
+        <div class="icono">🔐</div>
+        <h3>Cifrado Asimétrico</h3>
+        <p>
+          Utiliza dos claves relacionadas: una pública y una privada.
+          En esta sección podrás generar un par de claves
+          criptográficas.
+        </p>
+        <a routerLink="/cifrado-asimetrico" class="btn">
+          Ir al cifrado asimétrico
+        </a>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <p>Sistema de Cifrado | Seguridad Informática</p>
+  </footer>
+</div>
