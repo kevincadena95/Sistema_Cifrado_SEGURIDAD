@@ -1,0 +1,22 @@
+:host {
+  display: block;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.footer {
+  background-color: #68232e;
+  color: #ffffff;
+  padding: 22px 30px;
+  text-align: center;
+}
+
+.footer p {
+  margin: 5px 0;
+  font-size: 13px;
+  font-weight: 400;
+}
+
+.footer p:last-child {
+  color: #dfc8cc;
+  font-size: 12px;
+}

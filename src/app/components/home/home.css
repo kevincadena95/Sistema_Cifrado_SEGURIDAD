@@ -1,173 +1,136 @@
+
+:host {
+  display: block;
+  background: #faf9f9;
+  min-height: 100vh;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
 * {
   box-sizing: border-box;
 }
 
 .home-container {
-  min-height: 100vh;
-  background-color: #f8f9fa;
-  font-family: Arial, Helvetica, sans-serif;
-  color: #333;
-  display: flex;
-  flex-direction: column;
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 75px 30px;
 }
 
-.header {
-  background-color: white;
-  padding: 22px 8%;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  border-bottom: 3px solid #c62828;
-}
+/* BIENVENIDA */
 
-.logo {
-  font-size: 21px;
-  font-weight: bold;
-  color: #b71c1c;
-}
-
-.header-text {
-  color: #777;
-  font-size: 14px;
-}
-
-.main-content {
-  width: 100%;
-  max-width: 1150px;
-  margin: auto;
-  padding: 65px 25px;
+.bienvenida {
   text-align: center;
+  margin-bottom: 70px;
 }
 
-.welcome {
-  max-width: 780px;
-  margin: 0 auto 55px;
+.bienvenida h1 {
+  font-size: 38px;
+  color: #292929;
+  margin-bottom: 25px;
+  font-weight: 700;
 }
 
-.etiqueta {
-  background: #ffebee;
-  color: #c62828;
-  padding: 9px 18px;
-  border-radius: 20px;
-  font-size: 12px;
-  font-weight: bold;
-  letter-spacing: 1px;
+.bienvenida h1 span {
+  color: #68232e;
 }
 
-h1 {
-  font-size: 40px;
-  margin: 28px 0 18px;
-  color: #222;
-}
-
-h1 span {
-  color: #c62828;
-}
-
-.welcome p {
-  color: #666;
-  line-height: 1.8;
+.bienvenida p {
+  max-width: 720px;
+  margin: 0 auto;
   font-size: 16px;
+  line-height: 1.8;
+  color: #646464;
 }
 
-h2 {
-  font-size: 26px;
-  color: #333;
-  margin-bottom: 12px;
-}
+/* SECCION DE CIFRADO */
 
-.subtitle {
-  color: #777;
+.titulo-seccion {
+  text-align: center;
   margin-bottom: 35px;
 }
 
+.titulo-seccion h2 {
+  font-size: 26px;
+  color: #4d1e26;
+  margin-bottom: 12px;
+}
+
+.titulo-seccion p {
+  font-size: 15px;
+  color: #777;
+}
+
+/* TARJETAS */
+
 .cards {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 28px;
-  text-align: left;
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  max-width: 800px;
+  margin: 0 auto;
 }
 
 .card {
-  background: white;
-  border-radius: 14px;
-  padding: 35px;
-  border: 1px solid #eee;
-  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
-  transition:
-    transform 0.3s,
-    box-shadow 0.3s;
+  background: #ffffff;
+  border: 1px solid #e3dada;
+  border-radius: 8px;
+  padding: 32px;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
 }
 
-.card:hover {
-  transform: translateY(-6px);
-  box-shadow: 0 12px 28px rgba(198, 40, 40, 0.12);
-}
-
-.icono {
-  background: #ffebee;
-  border-radius: 12px;
-  padding: 15px;
-  font-size: 30px;
-  margin-bottom: 20px;
-}
-
 .card h3 {
-  font-size: 23px;
-  color: #b71c1c;
-  margin: 0 0 15px;
+  font-size: 22px;
+  color: #68232e;
+  margin: 0 0 16px;
 }
 
 .card p {
-  color: #666;
-  line-height: 1.8;
+  color: #626262;
   font-size: 15px;
-  margin-bottom: 30px;
-  flex-grow: 1;
+  line-height: 1.8;
+  margin: 0 0 25px;
 }
+
+/* BOTONES */
 
 .btn {
   display: inline-block;
-  background: #c62828;
+  background: #68232e;
   color: white;
-  padding: 13px 24px;
-  border-radius: 8px;
   text-decoration: none;
-  font-weight: bold;
+  padding: 13px 25px;
+  border-radius: 5px;
   font-size: 14px;
-  transition: background 0.3s;
+  font-weight: 600;
+  transition: background 0.2s ease;
 }
 
 .btn:hover {
-  background: #8e0000;
+  background: #46151e;
 }
 
-footer {
-  background: white;
-  text-align: center;
-  padding: 18px;
-  border-top: 1px solid #eee;
-  color: #888;
-  font-size: 13px;
-}
+/* RESPONSIVE */
 
 @media (max-width: 700px) {
-  .cards {
-    grid-template-columns: 1fr;
+  .home-container {
+    padding: 50px 20px;
   }
 
-  h1 {
+  .bienvenida h1 {
     font-size: 30px;
   }
 
-  .main-content {
-    padding: 45px 20px;
+  .bienvenida {
+    margin-bottom: 50px;
   }
 
-  .header-text {
-    display: none;
+  .card {
+    padding: 25px;
+  }
+
+  .card h3 {
+    font-size: 20px;
   }
 }

@@ -1,10 +1,23 @@
 <header class="header-nav">
+    <div class="header-container">
 
-    <nav class="nav-bar">
-        <a routerLink="/" routerLinkActive="activo" [routerLinkActiveOptions]="{ exact: true }">
-            HOME
+        <a routerLink="/" class="logo">
+            Sistema de Cifrado
         </a>
-        <a routerLink="/cifrado-simetrico" routerLinkActive="activo">Cifrado Simetrico</a>
-        <a routerLink="/cifrado-asimetrico" routerLinkActive="activo">Cifrado Asimetrico</a>
-    </nav>
+
+        <nav class="nav-bar">
+            <a routerLink="/" routerLinkActive="activo" [routerLinkActiveOptions]="{ exact: true }">
+                Home
+            </a>
+
+            <a routerLink="/cifrado-simetrico" routerLinkActive="activo">
+                Cifrado Simétrico
+            </a>
+
+            <a routerLink="/cifrado-asimetrico" routerLinkActive="activo">
+                Cifrado Asimétrico
+            </a>
+        </nav>
+
+    </div>
 </header>
