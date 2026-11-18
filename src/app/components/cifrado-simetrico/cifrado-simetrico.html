@@ -1,1 +1,164 @@
-<p>cifrado-simetrico works!</p>
+<div class="simetrico">
+
+    <div class="encabezado">
+        <h1>Cifrado Simétrico</h1>
+        <p>
+            Protege tus documentos mediante cifrado AES-256.
+            Utiliza una clave de seguridad para cifrar y recuperar
+            tus archivos.
+        </p>
+    </div>
+
+    <section class="panel">
+
+        <div class="titulo-panel">
+            <h2>Protección de archivos</h2>
+            <p>
+                Selecciona la operación que deseas realizar.
+            </p>
+        </div>
+
+        <!-- SELECCIONAR OPERACIÓN -->
+        <div class="selector-modo">
+
+            <button type="button" class="opcion-modo" [class.activo]="modo === 'cifrar'" [disabled]="procesando"
+                (click)="cambiarModo('cifrar')">
+                Cifrar archivo
+            </button>
+
+            <button type="button" class="opcion-modo" [class.activo]="modo === 'descifrar'" [disabled]="procesando"
+                (click)="cambiarModo('descifrar')">
+                Descifrar archivo
+            </button>
+
+        </div>
+
+        <div class="formulario">
+
+            <!-- SELECCIÓN DEL DOCUMENTO -->
+            <div class="campo">
+
+                <label for="archivo">
+                    {{ modo === 'cifrar'
+                    ? 'Seleccionar documento'
+                    : 'Seleccionar archivo cifrado' }}
+                </label>
+
+                <input #archivoInput id="archivo" type="file" [attr.accept]="modo === 'descifrar' ? '.enc' : null"
+                    [disabled]="procesando" (change)="seleccionarArchivo($event)">
+
+                <small>
+                    @if (modo === 'cifrar') {
+                    Puedes seleccionar documentos PDF, Word, Excel,
+                    imágenes y otros tipos de archivos.
+                    } @else {
+                    Selecciona un archivo con extensión .enc
+                    generado anteriormente por este sistema.
+                    }
+                </small>
+
+            </div>
+
+            <!-- INFORMACIÓN DEL ARCHIVO -->
+            @if (archivo) {
+
+            <div class="archivo-seleccionado">
+
+                <div class="archivo-detalle">
+                    <span class="archivo-etiqueta">Archivo seleccionado</span>
+                    <strong>{{ archivo.name }}</strong>
+                    <small>
+                        {{ (archivo.size / 1024 / 1024).toFixed(2) }} MB
+                    </small>
+                </div>
+
+            </div>
+
+            }
+
+            <!-- CONTRASEÑA -->
+            <div class="campo">
+
+                <label for="clave">
+                    Clave de seguridad
+                </label>
+
+                <input id="clave" type="password" [(ngModel)]="clave" [disabled]="procesando"
+                    autocomplete="new-password" placeholder="Ingresa tu clave de seguridad">
+
+                <small>
+                    La clave debe tener al menos 12 caracteres.
+                    Necesitarás exactamente la misma clave para
+                    recuperar el documento.
+                </small>
+
+            </div>
+
+            <!-- BOTÓN PRINCIPAL -->
+            <div class="acciones">
+
+                <button class="btn-principal" [disabled]="procesando" (click)="procesarArchivo()">
+
+                    @if (procesando) {
+                    Procesando archivo...
+                    } @else {
+                    {{ modo === 'cifrar'
+                    ? 'Cifrar documento'
+                    : 'Descifrar documento' }}
+                    }
+
+                </button>
+
+            </div>
+
+        </div>
+
+        <!-- MENSAJES -->
+        @if (error) {
+        <div class="alerta error">
+            {{ error }}
+        </div>
+        }
+
+        @if (mensaje) {
+        <div class="alerta exito">
+            {{ mensaje }}
+        </div>
+        }
+
+    </section>
+
+    <!-- ARCHIVO RESULTANTE -->
+    @if (resultado) {
+
+    <section class="panel resultado-panel">
+
+        <div class="titulo-panel">
+            <h2>Archivo generado</h2>
+            <p>
+                El proceso ha finalizado correctamente.
+                Puedes descargar el archivo resultante.
+            </p>
+        </div>
+
+        <div class="resultado-archivo">
+
+            <div class="resultado-info">
+                <span>Nombre del archivo</span>
+                <strong>{{ nombreResultado }}</strong>
+                <small>
+                    {{ (resultado.size / 1024 / 1024).toFixed(2) }} MB
+                </small>
+            </div>
+
+            <button class="btn-principal" (click)="descargarArchivo()">
+                Descargar archivo
+            </button>
+
+        </div>
+
+    </section>
+
+    }
+
+</div>
