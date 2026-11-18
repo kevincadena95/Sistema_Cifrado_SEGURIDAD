@@ -1,95 +1,165 @@
 
-import { Component, inject } from '@angular/core';
+import { Component, ChangeDetectorRef } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { CifradoAsimetricoService } from '../../services/cifrado-asimetrico';
 
 @Component({
   selector: 'app-cifrado-asimetrico',
   standalone: true,
-  imports: [],
+  imports: [FormsModule],
   templateUrl: './cifrado-asimetrico.html',
   styleUrl: './cifrado-asimetrico.css'
 })
 export class CifradoAsimetrico {
 
-  private servicio = inject(CifradoAsimetricoService);
+  nombre = '';
+  correo = '';
+  frase = '';
 
   clavePublica = '';
   clavePrivada = '';
 
+  mostrarClavePrivada = false;
+  sinProteccion = false;
   generando = false;
-  mostrarPrivada = false;
 
   mensaje = '';
   error = '';
 
-  // Generar las claves
-  async generarClaves(): Promise<void> {
+  constructor(
+    private cifradoService: CifradoAsimetricoService,
+    private cdr: ChangeDetectorRef
+  ) { }
 
-    if (this.generando) return;
+  // GENERAR CLAVES
+  async generarClaves() {
 
-    this.generando = true;
-    this.mensaje = '';
     this.error = '';
+    this.mensaje = '';
+    this.clavePublica = '';
+    this.clavePrivada = '';
+    this.mostrarClavePrivada = false;
+    this.sinProteccion = false;
+    this.generando = true;
 
     try {
-      const claves = await this.servicio.generarParClaves();
 
-      this.clavePublica = claves.publica;
-      this.clavePrivada = claves.privada;
+      const claves = await this.cifradoService.generarClaves(
+        this.nombre,
+        this.correo,
+        this.frase
+      );
 
-      this.mostrarPrivada = false;
+      this.clavePublica = claves.clavePublica;
+      this.clavePrivada = claves.clavePrivada;
+
+      this.sinProteccion = !this.frase.trim();
 
       this.mensaje = 'Las claves se generaron correctamente.';
 
-    } catch (error) {
+    } catch (error: unknown) {
+
       this.error = error instanceof Error
         ? error.message
-        : 'No se pudieron generar las claves.';
+        : 'Ocurrió un error al generar las claves.';
 
     } finally {
+
       this.generando = false;
+      this.cdr.detectChanges();
+
     }
   }
 
-  // Mostrar u ocultar la clave privada
-  cambiarVisibilidad(): void {
-    this.mostrarPrivada = !this.mostrarPrivada;
+  // MOSTRAR U OCULTAR CLAVE PRIVADA
+  alternarClavePrivada() {
+    this.mostrarClavePrivada = !this.mostrarClavePrivada;
   }
 
-  // Copiar una clave
-  async copiarClave(
-    clave: string,
-    tipo: string
-  ): Promise<void> {
+  // COPIAR CLAVE PUBLICA
+  async copiarClavePublica() {
+    await this.copiarTexto(
+      this.clavePublica,
+      'Clave pública copiada correctamente.'
+    );
+  }
+
+  // COPIAR CLAVE PRIVADA
+  async copiarClavePrivada() {
+
+    if (!this.mostrarClavePrivada) return;
+
+    await this.copiarTexto(
+      this.clavePrivada,
+      'Clave privada copiada correctamente.'
+    );
+  }
+
+  // FUNCION PARA COPIAR TEXTO
+  private async copiarTexto(
+    contenido: string,
+    mensajeExito: string
+  ) {
+
+    if (!contenido) return;
 
     try {
-      await navigator.clipboard.writeText(clave);
 
+      await navigator.clipboard.writeText(contenido);
+
+      this.mensaje = mensajeExito;
       this.error = '';
-      this.mensaje = `Clave ${tipo} copiada correctamente.`;
 
     } catch {
-      this.mensaje = '';
-      this.error = 'No se pudo copiar la clave.';
+
+      this.error = 'No se pudo copiar el contenido al portapapeles.';
+
+    } finally {
+
+      this.cdr.detectChanges();
+
     }
   }
 
-  // Descargar una clave en formato PEM
-  descargarClave(
-    clave: string,
-    nombre: string
-  ): void {
+  // DESCARGAR CLAVE PUBLICA
+  descargarClavePublica() {
+
+    if (!this.clavePublica) return;
+
+    this.descargarArchivo(
+      this.clavePublica,
+      'clave-publica.asc'
+    );
+  }
+
+  // DESCARGAR CLAVE PRIVADA
+  descargarClavePrivada() {
+
+    if (!this.clavePrivada) return;
+
+    this.descargarArchivo(
+      this.clavePrivada,
+      'clave-privada.asc'
+    );
+  }
+
+  // GENERAR ARCHIVO DESCARGABLE
+  private descargarArchivo(
+    contenido: string,
+    nombreArchivo: string
+  ) {
 
     const archivo = new Blob(
-      [clave],
-      { type: 'application/x-pem-file;charset=utf-8' }
+      [contenido],
+      { type: 'application/pgp-keys' }
     );
 
     const url = URL.createObjectURL(archivo);
+
     const enlace = document.createElement('a');
 
     enlace.href = url;
-    enlace.download = nombre;
+    enlace.download = nombreArchivo;
 
     document.body.appendChild(enlace);
     enlace.click();

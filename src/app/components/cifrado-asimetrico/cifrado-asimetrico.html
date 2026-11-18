@@ -1,129 +1,182 @@
-<main class="contenedor">
+<div class="asimetrico">
 
-    <section class="introduccion">
-        <h1>Generación de <span>Claves Asimétricas</span></h1>
-
+    <div class="encabezado">
+        <h1>Generador de claves públicas y privadas</h1>
         <p>
-            Genera un par de claves criptográficas mediante el
-            algoritmo RSA. La clave pública puede compartirse,
-            mientras que la clave privada debe mantenerse
-            protegida.
+            Genera un par de claves OpenPGP para proteger tu información.
+            Puedes copiar o descargar las claves generadas.
         </p>
-    </section>
+    </div>
 
-    <section class="generador">
+    <section class="panel">
 
-        <h2>Generar claves RSA</h2>
-
-        <p>
-            Presiona el botón para generar automáticamente
-            una clave pública y una clave privada.
-        </p>
-
-        <div class="detalles">
-            <p><strong>Algoritmo:</strong> RSA-OAEP</p>
-            <p><strong>Longitud:</strong> 3072 bits</p>
-            <p><strong>Hash:</strong> SHA-256</p>
+        <div class="titulo-panel">
+            <h2>Generación de claves</h2>
+            <p>
+                Ingresa tus datos para crear un nuevo par de claves.
+            </p>
         </div>
 
-        <button type="button" class="btn-principal" (click)="generarClaves()" [disabled]="generando">
+        <div class="formulario-grid">
 
-            {{ generando ? 'Generando claves...' : 'Generar claves' }}
+            <div class="campo">
+                <label for="nombre">Nombre</label>
+                <input id="nombre" type="text" [(ngModel)]="nombre" placeholder="Ingresa tu nombre">
+            </div>
 
-        </button>
+            <div class="campo">
+                <label for="correo">Correo electrónico</label>
+                <input id="correo" type="email" [(ngModel)]="correo" placeholder="ejemplo@correo.com">
+            </div>
 
-        @if (mensaje) {
-        <p class="mensaje-exito" aria-live="polite">
-            {{ mensaje }}
-        </p>
-        }
+            <div class="campo campo-completo">
+                <label for="frase">
+                    Frase de seguridad
+                    <span class="opcional">(Opcional)</span>
+                </label>
+
+                <input id="frase" type="password" [(ngModel)]="frase" autocomplete="new-password"
+                    placeholder="Ingresa una frase de seguridad si deseas proteger tu clave">
+
+                <small>
+                    Si utilizas una frase, debe tener al menos 12 caracteres.
+                    Si dejas este campo vacío, la clave privada se generará
+                    sin protección por contraseña.
+                </small>
+            </div>
+
+        </div>
+
+        <div class="acciones">
+            <button class="btn-principal" [disabled]="generando" (click)="generarClaves()">
+
+                {{ generando ? 'Generando claves...' : 'Generar claves' }}
+
+            </button>
+        </div>
 
         @if (error) {
-        <p class="mensaje-error" role="alert">
+        <div class="alerta error">
             {{ error }}
-        </p>
+        </div>
+        }
+
+        @if (mensaje) {
+        <div class="alerta exito">
+            {{ mensaje }}
+        </div>
+        }
+
+        @if (sinProteccion && clavePrivada) {
+        <div class="alerta advertencia">
+            La clave privada se generó sin frase de seguridad.
+            Guárdala en un lugar seguro y evita compartirla.
+        </div>
         }
 
     </section>
 
     @if (clavePublica && clavePrivada) {
 
-    <section class="resultados">
+    <section class="panel resultados">
 
-        <h2>Claves generadas</h2>
-
-        <div class="clave-contenedor">
-
-            <h3>Clave Pública</h3>
-
+        <div class="titulo-panel">
+            <h2>Claves generadas</h2>
             <p>
-                Esta clave puede compartirse con otras personas
-                para que puedan cifrar información dirigida a ti.
+                Tus claves están listas. Puedes visualizarlas,
+                copiarlas o descargarlas en formato OpenPGP.
             </p>
-
-            <textarea [value]="clavePublica" readonly spellcheck="false" aria-label="Clave pública">
-        </textarea>
-
-            <div class="acciones">
-
-                <button type="button" class="btn-secundario" (click)="copiarClave(clavePublica, 'pública')">
-                    Copiar clave
-                </button>
-
-                <button type="button" class="btn-secundario"
-                    (click)="descargarClave(clavePublica, 'clave_publica.pem')">
-                    Descargar clave
-                </button>
-
-            </div>
-
         </div>
 
-        <div class="clave-contenedor">
+        <div class="seccion-clave">
 
-            <h3>Clave Privada</h3>
+            <div class="titulo-clave">
+                <h3>1. Clave privada</h3>
+                <span class="etiqueta privada">Personal</span>
+            </div>
 
-            <p>
-                Esta clave es confidencial. No debes compartirla,
-                ya que permite descifrar información protegida
-                con la clave pública correspondiente.
+            <p class="descripcion">
+                Esta clave es confidencial y no debes compartirla.
+                Guárdala en un lugar seguro.
             </p>
 
-            @if (mostrarPrivada) {
+            @if (mostrarClavePrivada) {
 
-            <textarea [value]="clavePrivada" readonly spellcheck="false" aria-label="Clave privada">
-          </textarea>
+            <textarea class="contenido-clave" [value]="clavePrivada" readonly rows="9">
+        </textarea>
 
             } @else {
 
             <div class="clave-oculta">
-                La clave privada está oculta por seguridad.
+                <span>Clave privada oculta</span>
+                <p>
+                    Presiona el botón para visualizar
+                    el contenido de tu clave privada.
+                </p>
             </div>
 
             }
 
-            <div class="acciones">
+            <div class="botones">
 
-                <button type="button" class="btn-secundario" (click)="cambiarVisibilidad()">
+                <button class="btn-secundario" (click)="alternarClavePrivada()">
 
-                    {{ mostrarPrivada ? 'Ocultar clave' : 'Mostrar clave' }}
+                    {{ mostrarClavePrivada
+                    ? 'Ocultar clave privada'
+                    : 'Mostrar clave privada' }}
 
                 </button>
 
-                <button type="button" class="btn-secundario" (click)="copiarClave(clavePrivada, 'privada')">
-                    Copiar clave
+                @if (mostrarClavePrivada) {
+                <button class="btn-secundario" (click)="copiarClavePrivada()">
+                    Copiar clave privada
                 </button>
+                }
 
-                <button type="button" class="btn-secundario"
-                    (click)="descargarClave(clavePrivada, 'clave_privada.pem')">
-                    Descargar clave
+                <button class="btn-principal" (click)="descargarClavePrivada()">
+                    Descargar clave privada
                 </button>
 
             </div>
 
-            <p class="advertencia">
-                Guarda la clave privada en un lugar seguro.
-                No la compartas ni la subas a repositorios públicos.
+            <p class="archivo-info">
+                Archivo: clave-privada.asc
+            </p>
+
+        </div>
+
+        <div class="separador"></div>
+
+        
+        <div class="seccion-clave">
+
+            <div class="titulo-clave">
+                <h3>2. Clave pública</h3>
+                <span class="etiqueta publica">Compartible</span>
+            </div>
+
+            <p class="descripcion">
+                Puedes compartir esta clave para que otras personas
+                cifren información destinada a ti.
+            </p>
+
+            <textarea class="contenido-clave" [value]="clavePublica" readonly rows="9">
+        </textarea>
+
+            <div class="botones">
+
+                <button class="btn-secundario" (click)="copiarClavePublica()">
+                    Copiar clave pública
+                </button>
+
+                <button class="btn-principal" (click)="descargarClavePublica()">
+                    Descargar clave pública
+                </button>
+
+            </div>
+
+            <p class="archivo-info">
+                Archivo: clave-publica.asc
             </p>
 
         </div>
@@ -132,4 +185,4 @@
 
     }
 
-</main>
+</div>
